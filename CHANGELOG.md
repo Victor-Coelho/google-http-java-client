@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.41.6](https://github.com/googleapis/google-http-java-client/compare/v1.41.5...v1.41.6) (2022-04-01)
+
+
+### Bug Fixes
+
+* `Content-Encoding: gzip` along with `Transfer-Encoding: chunked` sometimes terminates early ([#1608](https://github.com/googleapis/google-http-java-client/issues/1608)) ([941da8b](https://github.com/googleapis/google-http-java-client/commit/941da8badf64068d11a53ac57a4ba35b2ad13490))
+
 ### [1.41.5](https://github.com/googleapis/google-http-java-client/compare/v1.41.4...v1.41.5) (2022-03-21)
 
 
