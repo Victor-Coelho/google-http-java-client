@@ -17,6 +17,8 @@ package com.google.api.client.http;
 import com.google.api.client.util.NanoClock;
 import junit.framework.TestCase;
 
+import static org.junit.Assert.assertNotEquals;
+
 /**
  * Tests {@link ExponentialBackOffPolicy}.
  *
@@ -128,6 +130,29 @@ public class ExponentialBackOffPolicyTest extends TestCase {
     public long nanoTime() {
       return (startSeconds + i++) * 1000000000;
     }
+  }
+
+  public void testIsBackOffRequired() {
+    ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
+    assertTrue(backOffPolicy.isBackOffRequired(HttpStatusCodes.STATUS_CODE_SERVER_ERROR));
+    assertTrue(backOffPolicy.isBackOffRequired(HttpStatusCodes.STATUS_CODE_SERVICE_UNAVAILABLE));
+    assertFalse(backOffPolicy.isBackOffRequired(HttpStatusCodes.STATUS_CODE_CREATED));
+  }
+
+  public void testZeroValueForGetInitialIntervalMillis() {
+    int initialIntervalMillis = new ExponentialBackOffPolicy.Builder().getInitialIntervalMillis();
+    assertNotEquals(0, initialIntervalMillis);
+  }
+
+  public void testZeroValueForGetMaxIntervalMillis() {
+    int maxIntervalMillis = new ExponentialBackOffPolicy.Builder().getMaxIntervalMillis();
+    assertNotEquals(0, maxIntervalMillis);
+  }
+
+
+  public void testZeroValueForGetMaxElapsedTimeMillis() {
+    int maxElapsedTimeMillis = new ExponentialBackOffPolicy.Builder().getMaxElapsedTimeMillis();
+    assertNotEquals(0, maxElapsedTimeMillis);
   }
 
   public void testGetElapsedTimeMillis() {

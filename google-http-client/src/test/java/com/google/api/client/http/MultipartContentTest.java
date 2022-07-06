@@ -18,6 +18,8 @@ import com.google.api.client.json.Json;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+
 import junit.framework.TestCase;
 
 /**
@@ -41,6 +43,51 @@ public class MultipartContentTest extends TestCase {
         + CRLF
         + "content-transfer-encoding: binary"
         + CRLF;
+  }
+
+  public void testSetBoundaryNotNull() throws Exception {
+    MultipartContent content = new MultipartContent();
+    assertNotNull(content.setBoundary("BOUNDARY"));
+  }
+
+  public void testPartNotNull() throws Exception {
+    final String[][] VALUES =
+            new String[][] {
+                    {"Hello world", "text/plain"},
+                    {"<xml>Hi</xml>", "application/xml"},
+                    {"{x:1,y:2}", "application/json"}
+            };
+    StringBuilder expectedStringBuilder = new StringBuilder();
+    for (String[] valueTypePair : VALUES) {
+      String contentValue = valueTypePair[0];
+      String contentType = valueTypePair[1];
+
+      MultipartContent.Part part = new MultipartContent.Part(ByteArrayContent.fromString(contentType, contentValue));
+      assertNotNull(part.getContent());
+      assertNotNull(part.setContent(ByteArrayContent.fromString(contentType, contentValue)));
+      assertNotNull(part.setHeaders(new HttpHeaders()));
+      assertNotNull(part.getHeaders());
+
+    }
+  }
+  public void testGetPartNotNull() throws Exception {
+    MultipartContent content = new MultipartContent();
+    final String[][] VALUES =
+            new String[][] {
+                    {"Hello world", "text/plain"},
+                    {"<xml>Hi</xml>", "application/xml"},
+                    {"{x:1,y:2}", "application/json"}
+            };
+    StringBuilder expectedStringBuilder = new StringBuilder();
+    for (String[] valueTypePair : VALUES) {
+      String contentValue = valueTypePair[0];
+      String contentType = valueTypePair[1];
+
+      MultipartContent.Part part = new MultipartContent.Part(ByteArrayContent.fromString(contentType, contentValue));
+      content.addPart(part);
+      assertFalse(content.getParts().isEmpty());
+
+    }
   }
 
   public void testRandomContent() throws Exception {
